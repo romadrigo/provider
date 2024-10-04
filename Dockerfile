@@ -19,11 +19,7 @@ ARG GROUPUID="2000"
 
 RUN addgroup --gid $GROUPUID $GROUP
 RUN adduser --uid $USERUID --gid $GROUPUID --disabled-password $USER
-RUN apt-get update && apt-get -f install -y --no-install-recommends \
-    iputils-ping \
-    net-tools \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install iputils-ping net-tools curl -y
 
 USER $USER
 
