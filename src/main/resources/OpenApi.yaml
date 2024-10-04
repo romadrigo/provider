@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Providers and Products API
+  description: API to list providers and providers products.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/provider/v1/
+    description: SwaggerHub API Auto Mocking
+    
+paths:
+  /providers:
+    get:
+      tags:
+          - Provider
+      summary: Return provider list
+      description: Get all available providers.
+      responses:
+        '200':
+          description: Success get provider list
+          content:
+            application/json:
+              schema:
+                type: array
+                description: 'List providers'
+                items:
+                  $ref: '#/components/schemas/ProviderResponse'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        '404':
+          description: Client  not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+  /providers/{providerId}:
+    get:
+      tags:
+          - Provider
+      summary: Return one provider
+      description: Get available providers by id.
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          description: ID provider
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success get provider
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/ProviderResponse'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        '404':
+          description: Client  not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+components:
+  schemas:
+    ProvidersResponse:
+        type: array
+        description: 'List providers'
+        items:
+          $ref: '#/components/schemas/ProviderResponse'
+    ProviderResponse:
+      type: object
+      required:
+        - id
+        - name
+      properties:            
+        id:
+          type: string
+          example: "550e8400-e29b-41d4-a716"
+        name:
+          type: string
+          example: "Lisboa"
+          minLength: 1
+        address:
+          type: string
+          example: "Calle 123, Portugal"
+        phone:
+          type: string
+          example: "+123456789"
+        availability:
+          type: boolean
+    RestError:
+      title: REST Error
+      description: The schema for all error responses.
+      type: object
+      properties:
+        status:
+          title: Status
+          description: The HTTP status code.
+          type: integer
+          format: int32
+          example: 400
+          readOnly: true
+        error:
+          title: Error
+          description: The short error message.
+          type: string
+          example: Bad Request
+          readOnly: true
+        path:
+          title: Path
+          description: The path of the URL for this request.
+          type: string
+          format: uri
+          example: '/api/provider'
+          readOnly: true
+        timestamp:
+          title: Timestamp
+          description: The time the error occured.
+          type: string
+          format: date-time
+          example: '2023-01-21T21:41:46.158+0000'
+          readOnly: true
+      required:
+        - status
+        - error
+        - path
+        - timestamp
